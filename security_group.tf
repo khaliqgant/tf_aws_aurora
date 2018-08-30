@@ -3,9 +3,7 @@ resource "aws_security_group" "aurora_security_group" {
   description = "Terraform-managed RDS security group for ${var.name}-${data.aws_vpc.vpc.tags["Name"]}"
   vpc_id      = "${data.aws_vpc.vpc.id}"
 
-  tags {
-    Name = "tf-sg-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"
-  }
+  tags = "${merge(var.tags, map("Name", "tf-sg-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"))}"
 }
 
 resource "aws_security_group_rule" "aurora_ingress" {

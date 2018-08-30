@@ -81,3 +81,9 @@ variable "family" { default = "aurora5.6"}
 variable "vpc_id" {
   description = "VPC ID"
 }
+
+variable "tags" {
+  type    = "map"
+  default = {}
+  description = "Tag map that can be applied to a resource"
+}

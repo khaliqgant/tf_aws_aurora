@@ -40,18 +40,14 @@ resource "aws_rds_cluster_instance" "aurora_instance" {
   monitoring_role_arn     = "${aws_iam_role.aurora_instance_role.arn}"
   monitoring_interval     = "5"
 
-  tags {
-    Name = "tf-rds-aurora-${var.name}-${data.aws_vpc.vpc.tags["Name"]}-${count.index}"
-  }
+  tags = "${merge(var.tags, map("Name", "tf-rds-aurora-${var.name}-${data.aws_vpc.vpc.tags["Name"]}-${count.index}"))}"
 }
 
 resource "aws_db_subnet_group" "aurora_subnet_group" {
   name       = "tf-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"
   subnet_ids = ["${var.subnets}"]
 
-  tags {
-    Name = "tf-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"
-  }
+  tags = "${merge(var.tags, map("Name", "tf-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"))}"
 }
 
 resource "aws_db_parameter_group" "aurora_parameter_group" {
@@ -61,21 +57,17 @@ resource "aws_db_parameter_group" "aurora_parameter_group" {
 
   parameter = ["${var.db_parameters}"]
 
-  tags {
-    Name = "tf-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"
-  }
+  tags = "${merge(var.tags, map("Name", "tf-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"))}"
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora_cluster_parameter_group" {
   name        = "tf-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"
-  family      = "${var.family}"                                                                              
+  family      = "${var.family}"
   description = "Terraform-managed cluster parameter group for ${var.name}-${data.aws_vpc.vpc.tags["Name"]}"
 
   parameter = ["${var.cluster_parameters}"]
 
-  tags {
-    Name = "tf-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"
-  }
+  tags = "${merge(var.tags, map("Name", "tf-rds-${var.name}-${data.aws_vpc.vpc.tags["Name"]}"))}"
 }
 
 resource "aws_db_option_group" "aurora_option_group" {
